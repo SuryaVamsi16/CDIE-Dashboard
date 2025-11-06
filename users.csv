@@ -1,0 +1,3 @@
+username,password,role,status
+Sam,1234,,approved
+Sam_1,securepass,user,approved
