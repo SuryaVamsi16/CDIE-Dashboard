@@ -24,7 +24,7 @@ def run_models(df):
         df["HOSPITAL_BILL"] + df["MONTHLY_EXPENSES"]
     )
     df["CHILD_DROPOUT_RISK"] = (df["TUITION_FEES"] > (
-        df["LOAN_AMOUNT"] + df["COMBINED_SALARY"] + df["MONTHLY_INCOME"]
+        df["LOAN_AMOUNT_X"] + df["COMBINED_SALARY"] + df["MONTHLY_INCOME"]
     )
 )
 
@@ -120,4 +120,5 @@ def predict_cross_domain(emp_id, df, hospital_model, hospital_scaler, hospital_i
         "STATE": row.get("STATE", None),
         "REGION": row.get("REGION", None)
     }
+
 
