@@ -18,15 +18,17 @@ def main():
     if "role" not in st.session_state:
         st.session_state.role = None
 
-    # Logout button
+    # Logout button in sidebar
     if st.session_state.logged_in:
-        if st.button("Logout"):
-            st.session_state.logged_in = False
-            st.session_state.role = None
-            for key in list(st.session_state.keys()):
-                if key not in ["logged_in", "role"]:
-                    del st.session_state[key]
-            st.rerun()
+        with st.sidebar:
+            st.markdown("### Session")
+            if st.button("Logout"):
+                st.session_state.logged_in = False
+                st.session_state.role = None
+                for key in list(st.session_state.keys()):
+                    if key not in ["logged_in", "role"]:
+                        del st.session_state[key]
+                st.rerun()
 
     # Login once per session
     if not st.session_state.logged_in:
@@ -99,6 +101,22 @@ def main():
             show_metadata(st.session_state.merged_df)
             run_models(st.session_state.merged_df)
             show_all_visualizations(st.session_state.merged_df)
+
+        # Request Form Section
+        st.subheader("Submit a Request")
+        with st.form("request_form"):
+            name = st.text_input("Your Name")
+            email = st.text_input("Email Address")
+            request_type = st.selectbox("Type of Request", ["Data Correction", "Feature Suggestion", "Bug Report", "Other"])
+            message = st.text_area("Message")
+
+            submitted = st.form_submit_button("Submit Request")
+            if submitted:
+                if name and email and message:
+                    st.success("Thank you! Your request has been submitted.")
+                    # Add logic here to store or process the request
+                else:
+                    st.warning("Please fill out all required fields.")
 
     elif selected_tab == "Admin":
         admin_panel()
