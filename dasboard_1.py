@@ -20,14 +20,13 @@ def main():
 
     # Logout button
     if st.session_state.logged_in:
-        with st.sidebar:
-            if st.button("Logout"):
-                st.session_state.logged_in = False
-                st.session_state.role = None
-                for key in list(st.session_state.keys()):
-                    if key not in ["logged_in", "role"]:
-                        del st.session_state[key]
-                st.experimental_rerun()
+        if st.button("Logout"):
+            st.session_state.logged_in = False
+            st.session_state.role = None
+            for key in list(st.session_state.keys()):
+                if key not in ["logged_in", "role"]:
+                    del st.session_state[key]
+            st.experimental_rerun()
 
     # Login once per session
     if not st.session_state.logged_in:
