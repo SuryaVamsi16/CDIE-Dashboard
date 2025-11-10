@@ -7,7 +7,7 @@ from admin_utils import admin_panel
 from data_utils import upload_and_merge_datasets
 from metadata_utils import show_metadata
 from model_utils import run_models
-from viz_utils import show_all_visualizations
+from viz_utils_2 import show_all_visualizations
 
 def show_access_request_form():
     st.title("Request Access")
