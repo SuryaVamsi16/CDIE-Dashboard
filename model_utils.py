@@ -24,7 +24,7 @@ def run_models(df):
         df["HOSPITAL_BILL"] + df["MONTHLY_EXPENSES"]
     )
     df["CHILD_DROPOUT_RISK"] = (df["TUITION_FEES"] > (
-        df["LOAN_AMOUNT"] + df["COMBINED_SALARY"] + df["MONTHLY_INCOME"]
+        df["LOAN_AMOUNT_X"] + df["COMBINED_SALARY"] + df["MONTHLY_INCOME"]
     )
 )
 
