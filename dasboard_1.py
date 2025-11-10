@@ -103,7 +103,7 @@ def main():
             show_all_visualizations(st.session_state.merged_df)
 
         # Request Form Section
-        st.subheader("Submit a Request")
+        st.subheader("Submit a General Request")
         with st.form("request_form"):
             name = st.text_input("Your Name")
             email = st.text_input("Email Address")
@@ -114,7 +114,22 @@ def main():
             if submitted:
                 if name and email and message:
                     st.success("Thank you! Your request has been submitted.")
-                    # Add logic here to store or process the request
+                else:
+                    st.warning("Please fill out all required fields.")
+
+        # Access Request Form Section
+        st.subheader("Access Request Form")
+        with st.form("access_request_form"):
+            full_name = st.text_input("Full Name")
+            access_email = st.text_input("Email Address", key="access_email")
+            department = st.text_input("Department or Role")
+            access_type = st.selectbox("Type of Access", ["View Only", "Edit", "Admin", "Custom"])
+            reason = st.text_area("Reason for Access")
+
+            access_submitted = st.form_submit_button("Submit Access Request")
+            if access_submitted:
+                if full_name and access_email and reason:
+                    st.success("Your access request has been submitted.")
                 else:
                     st.warning("Please fill out all required fields.")
 
