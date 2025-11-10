@@ -23,9 +23,7 @@ def show_histogram(df, num_var):
 
 def show_all_visualizations(df):
     numeric_features = [
-        "CHILD_DROPOUT_RISK","CAN_PAY_HOSPITAL_BILL","SALARY", "SPOUSE_SALARY", "OTHER_INCOME", "COMBINED_SALARY",
-        "HOSPITAL_BILL_AMOUNT", "TUTITION_FEES", "INSURANCE_AMOUNT", "MONTHLY_EXPENSES"
-    ]
+        "CHILD_DROPOUT_RISK","CAN_PAY_HOSPITAL_BILL"]
     categorical_groups = [
         "AGE_GROUP", "GENDER", "REGION", "TREATMENT_TYPE", "STATE", "CITY",
         "DEPARTMENT", "PROFESSION", "CHILD_EDUCATION_TYPE", "PARENT_EDUCATION"
@@ -37,5 +35,6 @@ def show_all_visualizations(df):
             for cat in categorical_groups:
                 if cat in df.columns:
                     show_grouped_bar(df, num, cat)
+
 
 
