@@ -3,7 +3,7 @@ import pandas as pd
 from io import BytesIO
 
 from auth_utils import login_panel
-from admin_utils_1 import admin_panel
+from admin_utils import admin_panel
 from data_utils import upload_and_merge_datasets, safe_read_csv
 from metadata_utils import show_metadata
 from model_utils import run_models
