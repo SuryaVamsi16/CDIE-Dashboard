@@ -1,14 +1,3 @@
-import streamlit as st
-import pandas as pd
-from io import BytesIO
-
-from auth_utils import login_panel
-from admin_utils import admin_panel
-from data_utils import upload_and_merge_datasets, safe_read_csv
-from metadata_utils import show_metadata
-from model_utils import run_models
-from viz_utils import show_all_visualizations
-
 def main():
     st.set_page_config(page_title="CDIE Dashboard", layout="wide")
 
@@ -17,6 +6,17 @@ def main():
         st.session_state.logged_in = False
     if "role" not in st.session_state:
         st.session_state.role = None
+
+    # Logout button
+    if st.session_state.logged_in:
+        if st.button("Logout", key="logout_btn"):
+            st.session_state.logged_in = False
+            st.session_state.role = None
+            # Optionally clear other session state variables
+            for key in list(st.session_state.keys()):
+                if key not in ["logged_in", "role"]:
+                    del st.session_state[key]
+            st.experimental_rerun()
 
     # Login once per session
     if not st.session_state.logged_in:
@@ -92,6 +92,3 @@ def main():
 
     elif selected_tab == "Admin":
         admin_panel()
-
-if __name__ == "__main__":
-    main()
