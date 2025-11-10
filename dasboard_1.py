@@ -26,7 +26,7 @@ def main():
             for key in list(st.session_state.keys()):
                 if key not in ["logged_in", "role"]:
                     del st.session_state[key]
-            st.experimental_rerun()
+            st.rerun()
 
     # Login once per session
     if not st.session_state.logged_in:
