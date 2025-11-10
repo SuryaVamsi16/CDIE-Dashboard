@@ -19,14 +19,10 @@ def show_comparison_bar(df, emp_df, feature, title):
     ax.set_title(f"{feature} Comparison")
     st.pyplot(fig)
 
-def show_category_vs_outcome(df, outcome_col):
+def show_category_vs_outcome(df, outcome_col, category_cols):
     st.subheader(f"{outcome_col} by Category")
 
-    # Identify categorical columns
-    categorical_cols = df.select_dtypes(include=["object", "category"]).columns
-    categorical_cols = [col for col in categorical_cols if col.upper() != "EMP_ID"]
-
-    for cat_col in categorical_cols:
+    for cat_col in category_cols:
         if outcome_col in df.columns and cat_col in df.columns:
             grouped = df.groupby(cat_col)[outcome_col].mean().reset_index()
             fig, ax = plt.subplots()
@@ -58,10 +54,14 @@ def show_all_visualizations(df):
             show_comparison_bar(df, emp_df, feature, f"{feature} vs Overall")
 
     # Binary comparisons
+    category_features = [
+        "CITY","DEPARTMENT", "STATE", "REGION", "ROLE", "DISEASE", "FIELD_OF_STUDY"
+    ]
+
     if "CAN_PAY" in df.columns:
         show_comparison_bar(df, emp_df, "CAN_PAY", "Hospital Bill Payment Ability")
-        show_category_vs_outcome(df, "CAN_PAY")
+        show_category_vs_outcome(df, "CAN_PAY", category_features)
 
     if "CHILD_DROPOUT_RISK" in df.columns:
         show_comparison_bar(df, emp_df, "CHILD_DROPOUT_RISK", "Child Dropout Risk")
-        show_category_vs_outcome(df, "CHILD_DROPOUT_RISK")
+        show_category_vs_outcome(df, "CHILD_DROPOUT_RISK", category_features)
