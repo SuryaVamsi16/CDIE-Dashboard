@@ -102,21 +102,7 @@ def main():
             run_models(st.session_state.merged_df)
             show_all_visualizations(st.session_state.merged_df)
 
-        # Request Form Section
-        st.subheader("Submit a General Request")
-        with st.form("request_form"):
-            name = st.text_input("Your Name")
-            email = st.text_input("Email Address")
-            request_type = st.selectbox("Type of Request", ["Data Correction", "Feature Suggestion", "Bug Report", "Other"])
-            message = st.text_area("Message")
-
-            submitted = st.form_submit_button("Submit Request")
-            if submitted:
-                if name and email and message:
-                    st.success("Thank you! Your request has been submitted.")
-                else:
-                    st.warning("Please fill out all required fields.")
-
+        
         # Access Request Form Section
         st.subheader("Access Request Form")
         with st.form("access_request_form"):
