@@ -4,59 +4,57 @@ from io import BytesIO
 
 from auth_utils import login_panel
 from admin_utils import admin_panel
-from data_utils import upload_and_merge_datasets, safe_read_csv
+from data_utils import upload_and_merge_datasets
 from metadata_utils import show_metadata
 from model_utils import run_models
 from viz_utils import show_all_visualizations
 
-def main():
-    st.set_page_config(page_title="CDIE Dashboard", layout="wide")
+def show_access_request_form():
+    st.title("Request Access")
+    with st.form("access_request_form"):
+        full_name = st.text_input("Full Name")
+        access_email = st.text_input("Email Address")
+        department = st.text_input("Department or Role")
+        access_type = st.selectbox("Type of Access", ["View Only", "Edit", "Admin", "Custom"])
+        reason = st.text_area("Reason for Access")
 
-    # Initialize login state
-    if "logged_in" not in st.session_state:
-        st.session_state.logged_in = False
-    if "role" not in st.session_state:
-        st.session_state.role = None
+        access_submitted = st.form_submit_button("Submit Access Request")
+        if access_submitted:
+            if full_name and access_email and reason:
+                st.success("Your access request has been submitted.")
+            else:
+                st.warning("Please fill out all required fields.")
 
-    # Sidebar: Access Request Form (before login) or Logout button (after login)
+    if st.button("Back to Login"):
+        st.session_state.view = "login"
+        st.rerun()
+
+def show_login_panel():
+    st.title("Welcome to CDIE Dashboard")
+    st.subheader("Login")
+    logged_in, role = login_panel()
+    if logged_in:
+        st.session_state.logged_in = True
+        st.session_state.role = role
+        st.rerun()
+
+    st.markdown("---")
+    if st.button("Request Access"):
+        st.session_state.view = "access"
+        st.rerun()
+
+def show_dashboard():
+    # Sidebar
     with st.sidebar:
-        if not st.session_state.logged_in:
-            st.markdown("### Request Access")
-            with st.form("access_request_form"):
-                full_name = st.text_input("Full Name")
-                access_email = st.text_input("Email Address")
-                department = st.text_input("Department or Role")
-                access_type = st.selectbox("Type of Access", ["View Only", "Edit", "Admin", "Custom"])
-                reason = st.text_area("Reason for Access")
-
-                access_submitted = st.form_submit_button("Submit Access Request")
-                if access_submitted:
-                    if full_name and access_email and reason:
-                        st.success("Your access request has been submitted.")
-                    else:
-                        st.warning("Please fill out all required fields.")
-        else:
-            st.markdown("### Session")
-            if st.button("Logout"):
-                st.session_state.logged_in = False
-                st.session_state.role = None
-                for key in list(st.session_state.keys()):
-                    if key not in ["logged_in", "role"]:
-                        del st.session_state[key]
-                st.rerun()
-
-    # Login panel
-    if not st.session_state.logged_in:
-        st.title("Welcome to CDIE Dashboard")
-        st.subheader("Login")
-
-        logged_in, role = login_panel()
-        if logged_in:
-            st.session_state.logged_in = True
-            st.session_state.role = role
+        st.markdown("### Session")
+        if st.button("Logout"):
+            for key in list(st.session_state.keys()):
+                if key not in ["logged_in", "role", "view"]:
+                    del st.session_state[key]
+            st.session_state.logged_in = False
+            st.session_state.role = None
+            st.session_state.view = "login"
             st.rerun()
-        else:
-            st.stop()
 
     # Tabs
     tabs = ["Dashboard"]
@@ -121,9 +119,45 @@ def main():
             run_models(st.session_state.merged_df)
             show_all_visualizations(st.session_state.merged_df)
 
-        
+        # General Request Form
+        st.subheader("Submit a General Request")
+        with st.form("request_form"):
+            name = st.text_input("Your Name")
+            email = st.text_input("Email Address")
+            request_type = st.selectbox("Type of Request", ["Data Correction", "Feature Suggestion", "Bug Report", "Other"])
+            message = st.text_area("Message")
+
+            submitted = st.form_submit_button("Submit Request")
+            if submitted:
+                if name and email and message:
+                    st.success("Thank you! Your request has been submitted.")
+                else:
+                    st.warning("Please fill out all required fields.")
+
     elif selected_tab == "Admin":
         admin_panel()
+
+def main():
+    st.set_page_config(page_title="CDIE Dashboard", layout="wide")
+
+    # Initialize session state
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+    if "role" not in st.session_state:
+        st.session_state.role = None
+    if "view" not in st.session_state:
+        st.session_state.view = "login"
+
+    # Before login
+    if not st.session_state.logged_in:
+        if st.session_state.view == "login":
+            show_login_panel()
+        elif st.session_state.view == "access":
+            show_access_request_form()
+        return
+
+    # After login
+    show_dashboard()
 
 if __name__ == "__main__":
     main()
