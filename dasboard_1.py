@@ -18,19 +18,10 @@ def main():
     if "role" not in st.session_state:
         st.session_state.role = None
 
-    # Show login panel and access request form if not logged in
-    if not st.session_state.logged_in:
-        st.title("Welcome to CDIE Dashboard")
-        st.subheader("Login")
-
-        logged_in, role = login_panel()
-        if logged_in:
-            st.session_state.logged_in = True
-            st.session_state.role = role
-            st.rerun()
-        else:
-            st.markdown("---")
-            st.subheader("Request Access")
+    # Sidebar: Access Request Form (before login) or Logout button (after login)
+    with st.sidebar:
+        if not st.session_state.logged_in:
+            st.markdown("### Request Access")
             with st.form("access_request_form"):
                 full_name = st.text_input("Full Name")
                 access_email = st.text_input("Email Address")
@@ -44,18 +35,28 @@ def main():
                         st.success("Your access request has been submitted.")
                     else:
                         st.warning("Please fill out all required fields.")
-            st.stop()
+        else:
+            st.markdown("### Session")
+            if st.button("Logout"):
+                st.session_state.logged_in = False
+                st.session_state.role = None
+                for key in list(st.session_state.keys()):
+                    if key not in ["logged_in", "role"]:
+                        del st.session_state[key]
+                st.rerun()
 
-    # Logout button in sidebar
-    with st.sidebar:
-        st.markdown("### Session")
-        if st.button("Logout"):
-            st.session_state.logged_in = False
-            st.session_state.role = None
-            for key in list(st.session_state.keys()):
-                if key not in ["logged_in", "role"]:
-                    del st.session_state[key]
+    # Login panel
+    if not st.session_state.logged_in:
+        st.title("Welcome to CDIE Dashboard")
+        st.subheader("Login")
+
+        logged_in, role = login_panel()
+        if logged_in:
+            st.session_state.logged_in = True
+            st.session_state.role = role
             st.rerun()
+        else:
+            st.stop()
 
     # Tabs
     tabs = ["Dashboard"]
